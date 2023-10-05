@@ -19,7 +19,7 @@ export class Article {
 
   @Prop({ required: true })
   DOI: string;
-  
+
   @Prop({ required: true })
   summary: string;
 }
