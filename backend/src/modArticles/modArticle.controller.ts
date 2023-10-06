@@ -7,25 +7,25 @@ import {
   Put,
   Delete,
 } from '@nestjs/common';
-import { ArticleService } from './article.service';
-import { CreateArticleDto } from './models/CreateArticleDto';
-import { Article } from './article.schema';
+import { ModArticleService } from './modArticle.service';
+import { CreateModArticleDto } from './models/CreateModArticleDto';
+import { ModArticle } from './modArticle.schema';
 
-@Controller('articles')
-export class ArticlesController {
-  constructor(private readonly ArticleService: ArticleService) {}
+@Controller('modArticles')
+export class ModArticlesController {
+  constructor(private readonly ModArticleService: ModArticleService) {}
 
-  //get request for http://localhost:5000/articles
+  //get request for http://localhost:5000/modArticles
   @Get()
-  async getArticles(): Promise<Article[]> {
-    return this.ArticleService.findAll().then();
+  async getModArticles(): Promise<ModArticle[]> {
+    return this.ModArticleService.findAll().then();
   }
 
-  //post request for http://localhost:5000/articles/new
+  //post request for http://localhost:5000/modArticles/new
   @Post()
-  async createArticle(
-    @Body() articles: CreateArticleDto,
-  ): Promise<CreateArticleDto> {
-    return this.ArticleService.create(articles).then();
+  async createModArticle(
+    @Body() modArticles: CreateModArticleDto,
+  ): Promise<CreateModArticleDto> {
+    return this.ModArticleService.create(modArticles).then();
   }
 }

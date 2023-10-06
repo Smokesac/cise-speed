@@ -1,27 +1,33 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
-export type ArticleDocument = HydratedDocument<Article>;
+export type ModArticleDocument = HydratedDocument<ModArticle>;
 
 @Schema()
-export class Article {
+export class ModArticle {
   @Prop({ required: true })
   title: string;
 
   @Prop({ required: true })
   authors: string[];
 
+  @Prop({ required: false })
+  journal: string;
+
+  @Prop({ required: false })
+  volume: string;
+
   @Prop({ required: true })
-  source: string;
+  numberPages: number;
 
   @Prop({ required: true })
   publicationYear: number;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   DOI: string;
 
   @Prop({ required: true })
-  summary: string;
+  submitterId: string;
 }
 
-export const ArticleSchema = SchemaFactory.createForClass(Article);
+export const ModArticleSchema = SchemaFactory.createForClass(ModArticle);
