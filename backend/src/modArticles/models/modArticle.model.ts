@@ -11,16 +11,14 @@ export const ModArticleSchema = new mongoose.Schema({
   submitterId: String,
 });
 
-export class ModArticle {
-  constructor(
-    public id: string,
-    public title: string,
-    public authors: string,
-    public journal: string,
-    public publicationYear: string,
-    public volume: string,
-    public numberPages: number,
-    public DOI: string,
-    public submitterId: string,
-  ) {}
+export interface ModArticle {
+  id: string;
+  title: string;
+  authors: string;
+  journal: string;
+  publicationYear: string;
+  volume: string;
+  numberPages: number;
+  DOI: string;
+  submitterId: string;
 }
