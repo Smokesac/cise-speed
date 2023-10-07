@@ -18,14 +18,35 @@ export class ModArticlesController {
   //get request for http://localhost:5000/modArticles
   @Get()
   async getModArticles(): Promise<ModArticle[]> {
-    return this.ModArticleService.findAll().then();
+    return this.ModArticleService.findAll();
   }
 
-  //post request for http://localhost:5000/modArticles/new
+  //get request for http://localhost:5000/modArticles/[id here]
+  @Get(':id')
+  async getModArticle(@Param('id') id: string): Promise<ModArticle> {
+    return await this.ModArticleService.findOne(id);
+  }
+
+  //post request for http://localhost:5000/modArticles
   @Post()
   async createModArticle(
     @Body() modArticles: CreateModArticleDto,
   ): Promise<CreateModArticleDto> {
-    return this.ModArticleService.create(modArticles).then();
+    return this.ModArticleService.create(modArticles);
+  }
+
+  //put request for http://localhost:5000/modArticles/[id here]
+  @Put(':id')
+  async updateModArticle(
+    @Param('id') id: string,
+    @Body() post: ModArticle,
+  ): Promise<ModArticle> {
+    return await this.ModArticleService.update(id, post);
+  }
+
+  //delete request for http://localhost:5000/modArticles/[id here]
+  @Delete(':id')
+  async deleteModArticle(@Param('id') id: string): Promise<ModArticle> {
+    return await this.ModArticleService.delete(id);
   }
 }

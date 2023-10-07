@@ -10,12 +10,26 @@ export class ArticleService {
     @InjectModel(Article.name) private articleModel: Model<Article>,
   ) {}
 
-  async create(book: CreateArticleDto): Promise<Article> {
-    const createdArticle = new this.articleModel(book);
+  async create(article: CreateArticleDto): Promise<Article> {
+    const createdArticle = new this.articleModel(article);
     return createdArticle.save();
   }
 
   async findAll(): Promise<Article[]> {
     return this.articleModel.find().exec();
+  }
+
+  async findOne(id: string): Promise<Article> {
+    return await this.articleModel.findById(id).exec();
+  }
+
+  async update(id: string, post: Article): Promise<Article> {
+    return await this.articleModel.findByIdAndUpdate(id, post, {
+      new: true,
+    });
+  }
+
+  async delete(id: string): Promise<Article> {
+    return await this.articleModel.findByIdAndRemove(id);
   }
 }

@@ -18,4 +18,18 @@ export class ModArticleService {
   async findAll(): Promise<ModArticle[]> {
     return this.modArticleModel.find().exec();
   }
+
+  async findOne(id: string): Promise<ModArticle> {
+    return await this.modArticleModel.findById(id).exec();
+  }
+
+  async update(id: string, post: ModArticle): Promise<ModArticle> {
+    return await this.modArticleModel.findByIdAndUpdate(id, post, {
+      new: true,
+    });
+  }
+
+  async delete(id: string): Promise<ModArticle> {
+    return await this.modArticleModel.findByIdAndRemove(id);
+  }
 }
