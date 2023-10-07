@@ -11,7 +11,7 @@ export class AnalystArticle {
   @Prop({ required: true })
   authors: string[];
 
-  @Prop({ required: false })
+  @Prop({ required: true })
   journal: string;
 
   @Prop({ required: false })

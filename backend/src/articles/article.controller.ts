@@ -18,7 +18,7 @@ export class ArticlesController {
   //get request for http://localhost:5000/articles
   @Get()
   async getArticles(): Promise<Article[]> {
-    return this.ArticleService.findAll().then();
+    return await this.ArticleService.findAll().then();
   }
 
   //get request for http://localhost:5000/articles/[id here]
@@ -30,7 +30,7 @@ export class ArticlesController {
   //post request for http://localhost:5000/articles/new
   @Post()
   async createArticle(@Body() articles: ArticleDto): Promise<ArticleDto> {
-    return this.ArticleService.create(articles).then();
+    return await this.ArticleService.create(articles).then();
   }
 
   //put request for http://localhost:5000/articles/[id here]

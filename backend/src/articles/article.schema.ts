@@ -12,13 +12,37 @@ export class Article {
   authors: string[];
 
   @Prop({ required: true })
-  source: string;
+  journal: string;
 
   @Prop({ required: true })
   publicationYear: number;
 
+  @Prop({ required: false })
+  volume: string;
+
   @Prop({ required: true })
+  numberPages: string;
+
+  @Prop({ required: false })
   DOI: string;
+
+  @Prop({ required: true })
+  sEPractice: string;
+
+  @Prop({ required: true })
+  claim: string;
+
+  @Prop({ required: true })
+  researchType: string;
+
+  @Prop({ required: true })
+  participantType: string;
+
+  @Prop({ required: true })
+  evidenceResult: string;
+
+  @Prop({ required: true })
+  tags: string[];
 
   @Prop({ required: true })
   summary: string;

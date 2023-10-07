@@ -18,7 +18,7 @@ export class AnalystArticlesController {
   //get request for http://localhost:5000/analystArticles
   @Get()
   async getAnalystArticles(): Promise<AnalystArticle[]> {
-    return this.AnalystArticleService.findAll();
+    return await this.AnalystArticleService.findAll();
   }
 
   //get request for http://localhost:5000/analystArticles/[id here]
@@ -32,7 +32,7 @@ export class AnalystArticlesController {
   async createAnalystArticle(
     @Body() analystArticles: AnalystArticleDto,
   ): Promise<AnalystArticleDto> {
-    return this.AnalystArticleService.create(analystArticles);
+    return await this.AnalystArticleService.create(analystArticles);
   }
 
   //put request for http://localhost:5000/analystArticles/[id here]

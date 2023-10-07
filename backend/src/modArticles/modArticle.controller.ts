@@ -18,7 +18,7 @@ export class ModArticlesController {
   //get request for http://localhost:5000/modArticles
   @Get()
   async getModArticles(): Promise<ModArticle[]> {
-    return this.ModArticleService.findAll();
+    return await this.ModArticleService.findAll();
   }
 
   //get request for http://localhost:5000/modArticles/[id here]
@@ -32,7 +32,7 @@ export class ModArticlesController {
   async createModArticle(
     @Body() modArticles: ModArticleDto,
   ): Promise<ModArticleDto> {
-    return this.ModArticleService.create(modArticles);
+    return await this.ModArticleService.create(modArticles);
   }
 
   //put request for http://localhost:5000/modArticles/[id here]
