@@ -1,4 +1,4 @@
-export class CreateArticleDto {
+export class ArticleDto {
   title: string;
   authors: string[];
   journal: string;

@@ -1,4 +1,4 @@
-export class CreateModArticleDto {
+export class ModArticleDto {
   title: string;
   authors: string[];
   journal: string;

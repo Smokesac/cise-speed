@@ -2,7 +2,7 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Article } from './article.schema';
-import { CreateArticleDto } from './models/CreateArticleDto';
+import { ArticleDto } from './models/ArticleDto';
 
 @Injectable()
 export class ArticleService {
@@ -10,7 +10,7 @@ export class ArticleService {
     @InjectModel(Article.name) private articleModel: Model<Article>,
   ) {}
 
-  async create(article: CreateArticleDto): Promise<Article> {
+  async create(article: ArticleDto): Promise<Article> {
     const createdArticle = new this.articleModel(article);
     return createdArticle.save();
   }

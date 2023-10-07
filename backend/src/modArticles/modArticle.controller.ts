@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { ModArticleService } from './modArticle.service';
-import { CreateModArticleDto } from './models/CreateModArticleDto';
+import { ModArticleDto } from './models/ModArticleDto';
 import { ModArticle } from './modArticle.schema';
 
 @Controller('modArticles')
@@ -30,8 +30,8 @@ export class ModArticlesController {
   //post request for http://localhost:5000/modArticles
   @Post()
   async createModArticle(
-    @Body() modArticles: CreateModArticleDto,
-  ): Promise<CreateModArticleDto> {
+    @Body() modArticles: ModArticleDto,
+  ): Promise<ModArticleDto> {
     return this.ModArticleService.create(modArticles);
   }
 
