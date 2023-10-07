@@ -8,8 +8,11 @@ import {
     TableBody,
     TableColumn,
     TableRow,
-    TableCell
+    TableCell,
+    getKeyValue
   } from "@nextui-org/table";
+
+  import { Button } from '@nextui-org/react';
 
 interface ArticlesInterface {
     id: string;
@@ -29,45 +32,38 @@ interface ArticlesInterface {
     summary: string;
 }
 
-type ArticlesProps = {
-    articles: ArticlesInterface[];
-};
+import React from "react";
 
-const Admin: NextPage<ArticlesProps> = ({ articles }) => {
-    const headers: { key: keyof ArticlesInterface; label: string }[] = [
-        { key: "title", label: "Title" },
-        { key: "authors", label: "Authors" },
-        { key: "source", label: "Source" },
-        { key: "pubyear", label: "Publication Year" },
-        { key: "doi", label: "DOI" },
-        { key: "claim", label: "Claim" },
-        { key: "evidence", label: "Evidence" },
-    ];
-    return (
-        <div className="container">
-            <h1>Admin Data Management</h1>
-            <p>Page containing a table of articles:</p>
-            <SortableTable headers={headers} data={articles} />
-        </div>
-    );
-};
-export const getStaticProps: GetStaticProps<ArticlesProps> = async (_) => {
-    // Map the data to ensure all articles have consistent property names
-    const articles = data.articles.map((article) => ({
-        id: article.id ?? article._id,
-        title: article.title,
-        authors: article.authors,
-        source: article.source,
-        pubyear: article.pubyear,
-        doi: article.doi,
-        claim: article.claim,
-        evidence: article.evidence,
-    }));
-    
-    return {
-        props: {
-            articles,
-        },
-    };
-};
-export default Admin;
+export default function App() {
+  return (
+    <Table isStriped aria-label="Example static collection table">
+      <TableHeader>
+        <TableColumn>NAME</TableColumn>
+        <TableColumn>ROLE</TableColumn>
+        <TableColumn>STATUS</TableColumn>
+      </TableHeader>
+      <TableBody>
+        <TableRow key="1">
+          <TableCell>Tony Reichert</TableCell>
+          <TableCell>CEO</TableCell>
+          <TableCell>Active</TableCell>
+        </TableRow>
+        <TableRow key="2">
+          <TableCell>Zoey Lang</TableCell>
+          <TableCell>Technical Lead</TableCell>
+          <TableCell>Paused</TableCell>
+        </TableRow>
+        <TableRow key="3">
+          <TableCell>Jane Fisher</TableCell>
+          <TableCell>Senior Developer</TableCell>
+          <TableCell>Active</TableCell>
+        </TableRow>
+        <TableRow key="4">
+          <TableCell>William Howard</TableCell>
+          <TableCell>Community Manager</TableCell>
+          <TableCell>Vacation</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  );
+}
