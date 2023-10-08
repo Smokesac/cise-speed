@@ -2,6 +2,7 @@ import type { Config } from 'tailwindcss'
 
 const {nextui} = require("@nextui-org/react");
 
+//NextUI is configured here to work with tailwind
 const config: Config = {
   content: [
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
