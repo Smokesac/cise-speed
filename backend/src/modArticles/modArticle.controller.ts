@@ -15,19 +15,19 @@ import { ModArticle } from './modArticle.schema';
 export class ModArticlesController {
   constructor(private readonly ModArticleService: ModArticleService) {}
 
-  //get request for http://localhost:5000/modArticles
+  //get request for [backend url]/modArticles
   @Get()
   async getModArticles(): Promise<ModArticle[]> {
     return await this.ModArticleService.findAll();
   }
 
-  //get request for http://localhost:5000/modArticles/[id here]
+  //get request for [backend url]/modArticles/[id here]
   @Get(':id')
   async getModArticle(@Param('id') id: string): Promise<ModArticle> {
     return await this.ModArticleService.findOne(id);
   }
 
-  //post request for http://localhost:5000/modArticles
+  //post request for [backend url]/modArticles
   @Post()
   async createModArticle(
     @Body() modArticles: ModArticleDto,
@@ -35,7 +35,7 @@ export class ModArticlesController {
     return await this.ModArticleService.create(modArticles);
   }
 
-  //put request for http://localhost:5000/modArticles/[id here]
+  //put request for [backend url]/modArticles/[id here]
   @Put(':id')
   async updateModArticle(
     @Param('id') id: string,
@@ -44,7 +44,7 @@ export class ModArticlesController {
     return await this.ModArticleService.update(id, post);
   }
 
-  //delete request for http://localhost:5000/modArticles/[id here]
+  //delete request for [backend url]/modArticles/[id here]
   @Delete(':id')
   async deleteModArticle(@Param('id') id: string): Promise<ModArticle> {
     return await this.ModArticleService.delete(id);

@@ -15,31 +15,31 @@ import { Tag } from './tag.schema';
 export class TagsController {
   constructor(private readonly TagService: TagService) {}
 
-  //get request for http://localhost:5000/tags
+  //get request for [backend url]/tags
   @Get()
   async getTags(): Promise<Tag[]> {
     return await this.TagService.findAll();
   }
 
-  //get request for http://localhost:5000/tags/[id here]
+  //get request for [backend url]/tags/[id here]
   @Get(':id')
   async getTag(@Param('id') id: string): Promise<Tag> {
     return await this.TagService.findOne(id);
   }
 
-  //post request for http://localhost:5000/tags
+  //post request for [backend url]/tags
   @Post()
   async createTag(@Body() tags: TagDto): Promise<TagDto> {
     return await this.TagService.create(tags);
   }
 
-  //put request for http://localhost:5000/tags/[id here]
+  //put request for [backend url]/tags/[id here]
   @Put(':id')
   async updateTag(@Param('id') id: string, @Body() post: Tag): Promise<Tag> {
     return await this.TagService.update(id, post);
   }
 
-  //delete request for http://localhost:5000/tags/[id here]
+  //delete request for [backend url]/tags/[id here]
   @Delete(':id')
   async deleteTag(@Param('id') id: string): Promise<Tag> {
     return await this.TagService.delete(id);

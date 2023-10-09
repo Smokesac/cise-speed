@@ -15,25 +15,25 @@ import { Article } from './article.schema';
 export class ArticlesController {
   constructor(private readonly ArticleService: ArticleService) {}
 
-  //get request for http://localhost:5000/articles
+  //get request for [backend url]/articles
   @Get()
   async getArticles(): Promise<Article[]> {
     return await this.ArticleService.findAll().then();
   }
 
-  //get request for http://localhost:5000/articles/[id here]
+  //get request for [backend url]/articles/[id here]
   @Get(':id')
   async getArticle(@Param('id') id: string): Promise<Article> {
     return await this.ArticleService.findOne(id);
   }
 
-  //post request for http://localhost:5000/articles/new
+  //post request for [backend url]/articles/new
   @Post()
   async createArticle(@Body() articles: ArticleDto): Promise<ArticleDto> {
     return await this.ArticleService.create(articles).then();
   }
 
-  //put request for http://localhost:5000/articles/[id here]
+  //put request for [backend url]/articles/[id here]
   @Put(':id')
   async updateArticle(
     @Param('id') id: string,
@@ -42,7 +42,7 @@ export class ArticlesController {
     return await this.ArticleService.update(id, post);
   }
 
-  //delete request for http://localhost:5000/articles/[id here]
+  //delete request for [backend url]/articles/[id here]
   @Delete(':id')
   async deleteArticle(@Param('id') id: string): Promise<Article> {
     return await this.ArticleService.delete(id);

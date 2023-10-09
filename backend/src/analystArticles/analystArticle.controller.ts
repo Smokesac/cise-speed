@@ -15,19 +15,19 @@ import { AnalystArticle } from './analystArticle.schema';
 export class AnalystArticlesController {
   constructor(private readonly AnalystArticleService: AnalystArticleService) {}
 
-  //get request for http://localhost:5000/analystArticles
+  //get request for [backend url]/analystArticles
   @Get()
   async getAnalystArticles(): Promise<AnalystArticle[]> {
     return await this.AnalystArticleService.findAll();
   }
 
-  //get request for http://localhost:5000/analystArticles/[id here]
+  //get request for [backend url]/analystArticles/[id here]
   @Get(':id')
   async getAnalystArticle(@Param('id') id: string): Promise<AnalystArticle> {
     return await this.AnalystArticleService.findOne(id);
   }
 
-  //post request for http://localhost:5000/analystArticles
+  //post request for [backend url]/analystArticles
   @Post()
   async createAnalystArticle(
     @Body() analystArticles: AnalystArticleDto,
@@ -35,7 +35,7 @@ export class AnalystArticlesController {
     return await this.AnalystArticleService.create(analystArticles);
   }
 
-  //put request for http://localhost:5000/analystArticles/[id here]
+  //put request for [backend url]/analystArticles/[id here]
   @Put(':id')
   async updateAnalystArticle(
     @Param('id') id: string,
@@ -44,7 +44,7 @@ export class AnalystArticlesController {
     return await this.AnalystArticleService.update(id, post);
   }
 
-  //delete request for http://localhost:5000/analystArticles/[id here]
+  //delete request for [backend url]/analystArticles/[id here]
   @Delete(':id')
   async deleteAnalystArticle(@Param('id') id: string): Promise<AnalystArticle> {
     return await this.AnalystArticleService.delete(id);

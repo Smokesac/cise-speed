@@ -17,19 +17,19 @@ export class RejectedArticlesController {
     private readonly RejectedArticleService: RejectedArticleService,
   ) {}
 
-  //get request for http://localhost:5000/rejectedArticles
+  //get request for [backend url]/rejectedArticles
   @Get()
   async getRejectedArticles(): Promise<RejectedArticle[]> {
     return await this.RejectedArticleService.findAll();
   }
 
-  //get request for http://localhost:5000/rejectedArticles/[id here]
+  //get request for [backend url]/rejectedArticles/[id here]
   @Get(':id')
   async getRejectedArticle(@Param('id') id: string): Promise<RejectedArticle> {
     return await this.RejectedArticleService.findOne(id);
   }
 
-  //post request for http://localhost:5000/rejectedArticles
+  //post request for [backend url]/rejectedArticles
   @Post()
   async createRejectedArticle(
     @Body() rejectedArticles: RejectedArticleDto,
@@ -37,7 +37,7 @@ export class RejectedArticlesController {
     return await this.RejectedArticleService.create(rejectedArticles);
   }
 
-  //put request for http://localhost:5000/rejectedArticles/[id here]
+  //put request for [backend url]/rejectedArticles/[id here]
   @Put(':id')
   async updateRejectedArticle(
     @Param('id') id: string,
@@ -46,7 +46,7 @@ export class RejectedArticlesController {
     return await this.RejectedArticleService.update(id, post);
   }
 
-  //delete request for http://localhost:5000/rejectedArticles/[id here]
+  //delete request for [backend url]/rejectedArticles/[id here]
   @Delete(':id')
   async deleteRejectedArticle(
     @Param('id') id: string,
