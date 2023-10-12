@@ -4,11 +4,6 @@ import { useState, useEffect } from 'react';
 import { URL } from '../URLs';
 import type { Column } from './Columns';
 import { articleColumns, modColumns, analystColumns, rejectedColumns, tags } from './Columns';
-import { IAnalystArticle } from "./interfaces/IAnalystArticle";
-import { IArticle } from "./interfaces/IArticle";
-import { IModArticle } from "./interfaces/IModArticle";
-import { IRejectedArticle } from "./interfaces/IRejectedArticle";
-import { ITag } from './interfaces/ITag';
 
 //Generate a NEXUI table of data from a backend collection
 export default function AdminTable({ collection } : { collection : string}) {

@@ -7,7 +7,7 @@ export default function AdminPage() {
   const [selected, setSelected] : any = React.useState("articles");
 
   return (
-    <div className="flex w-full flex-col">
+    <div className="flex w-full flex-col z-0">
     <Tabs 
       aria-label="Options"         
       selectedKey={selected}
