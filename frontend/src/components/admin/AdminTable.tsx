@@ -1,9 +1,14 @@
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Tooltip, ChipProps, getKeyValue } from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Tooltip, ChipProps, getKeyValue, colors } from "@nextui-org/react";
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { URL } from '../URLs';
 import type { Column } from './Columns';
 import { articleColumns, modColumns, analystColumns, rejectedColumns, tags } from './Columns';
+import { IAnalystArticle } from "./interfaces/IAnalystArticle";
+import { IArticle } from "./interfaces/IArticle";
+import { IModArticle } from "./interfaces/IModArticle";
+import { IRejectedArticle } from "./interfaces/IRejectedArticle";
+import { ITag } from './interfaces/ITag';
 
 //Generate a NEXUI table of data from a backend collection
 export default function AdminTable({ collection } : { collection : string}) {
@@ -11,7 +16,7 @@ export default function AdminTable({ collection } : { collection : string}) {
 
     let columns: Column[] = [];
 
-    columns = GetColumns(collection);
+    columns = getColumns(collection);
     
     //Run on first render of state
     useEffect(() => {
@@ -19,7 +24,9 @@ export default function AdminTable({ collection } : { collection : string}) {
     }, [])
 
     return (
-        <Table isStriped aria-label="Collection table">
+        <Table color={"primary"}
+        selectionMode="single"
+        aria-label="Collection table">
             <TableHeader columns={columns}>
                 {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
             </TableHeader>
@@ -31,7 +38,7 @@ export default function AdminTable({ collection } : { collection : string}) {
 }
 
 //Return table columns based on collection
-function GetColumns(collectionString : string) {
+function getColumns(collectionString : string) {
     let columns: Column[] = [];
 
     switch (collectionString) {
@@ -65,14 +72,25 @@ function pullCollection(collection : string, setShowRows : React.Dispatch<React.
     fetch(URL.url + '/' + collection)
     .then(response => response.json())
     .then(responseData => {
-        displayData = responseData.map(function(article : any) {
+        displayData = responseData.map(function(row : any) {
+            commaSeparateValues(row);
+
             return (
-                <TableRow key={article._id}>
-                    {(columnKey) => <TableCell>{getKeyValue(article, columnKey)}</TableCell>}
+                <TableRow key={row._id}>
+                    {(columnKey) => <TableCell>{getKeyValue(row, columnKey)}</TableCell>}
                 </TableRow>
             )
         })
         setShowRows(displayData);
     })
     .catch((err) => console.log(err));
+}
+
+//Separate array values in the JSON
+function commaSeparateValues(row : any) {
+    Object.keys(row).forEach(function(v : any) {
+        if (Array.isArray(row[v])) {
+            row[v] = row[v].join(', ');
+        }
+    });
 }
