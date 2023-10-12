@@ -2,6 +2,7 @@ import React from "react";
 import AdminTable from '../components/admin/AdminTable';
 import {Tabs, Tab, Card, CardBody, CardHeader} from "@nextui-org/react";
 
+//Show a tab switcher and the table for that tab
 export default function AdminPage() {
   const [selected, setSelected] : any = React.useState("articles");
 

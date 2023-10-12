@@ -8,46 +8,14 @@ import { articleColumns, modColumns, analystColumns, rejectedColumns, tags } fro
 //Generate a NEXUI table of data from a backend collection
 export default function AdminTable({ collection } : { collection : string}) {
     const [showRows, setShowRows] = useState();
-    let displayData;
 
     let columns: Column[] = [];
 
-    if (collection == 'articles') {
-        columns = articleColumns;
-    }
-    else if (collection == 'modArticles') {
-        columns = modColumns;
-    } 
-    else if (collection == 'analystArticles') {
-        columns = analystColumns;
-    } 
-    else if (collection == 'rejectedArticles') {
-        columns = rejectedColumns;
-    } 
-    else if (collection == 'tags') {
-        columns = tags;
-    }
-
-    //Pull from backend and generate rows
-    function pullCollection() {
-        fetch(URL.url + '/' + collection)
-        .then(response => response.json())
-        .then(responseData => {
-            displayData = responseData.map(function(article : any) {
-                return (
-                    <TableRow key={article._id}>
-                        {(columnKey) => <TableCell>{getKeyValue(article, columnKey)}</TableCell>}
-                    </TableRow>
-                )
-            })
-            setShowRows(displayData);
-        })
-        .catch((err) => console.log(err));
-    }
+    columns = GetColumns(collection);
     
     //Run on first render of state
     useEffect(() => {
-        pullCollection();
+        pullCollection(collection, setShowRows);
     }, [])
 
     return (
@@ -60,4 +28,51 @@ export default function AdminTable({ collection } : { collection : string}) {
             </TableBody>
         </Table>
     );
+}
+
+//Return table columns based on collection
+function GetColumns(collectionString : string) {
+    let columns: Column[] = [];
+
+    switch (collectionString) {
+        case 'articles': {
+            columns = articleColumns;
+        }
+        case 'modArticles': {
+            columns = modColumns;
+        }
+        case 'analystArticles': {
+            columns = analystColumns;
+        }
+        case 'rejectedArticles': {
+            columns = rejectedColumns;
+        }
+        case 'tags': {
+            columns = tags;
+        }
+        default: {
+            columns = articleColumns;
+        }
+    }
+
+    return columns;
+}
+
+//Pull from backend and generate rows
+function pullCollection(collection : string, setShowRows : React.Dispatch<React.SetStateAction<undefined>>) {
+    let displayData;
+
+    fetch(URL.url + '/' + collection)
+    .then(response => response.json())
+    .then(responseData => {
+        displayData = responseData.map(function(article : any) {
+            return (
+                <TableRow key={article._id}>
+                    {(columnKey) => <TableCell>{getKeyValue(article, columnKey)}</TableCell>}
+                </TableRow>
+            )
+        })
+        setShowRows(displayData);
+    })
+    .catch((err) => console.log(err));
 }
