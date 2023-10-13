@@ -60,6 +60,7 @@ const SortableTable: React.FC<SortableTableProps> = ({ headers, data }) => {
     }
   };
 
+  //Clear the search field
   const handleClear = () => {
     // Reset the search term and show the entire dataset
     setCurrentSearchTerm("");

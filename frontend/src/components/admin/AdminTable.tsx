@@ -72,9 +72,11 @@ export function getColumns(collectionString : string) {
 function generateRows(collection : string, setShowRows : React.Dispatch<React.SetStateAction<undefined>>) {
     let displayData;
 
+    //Get all documents from collection
     fetch(URL.url + "/" + collection)
     .then(response => response.json())
     .then(responseData => {
+        //Parse data into rows
         displayData = responseData.map(function(row : any) {
             commaSeparateValues(row);
 
