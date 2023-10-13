@@ -1,34 +1,46 @@
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Tooltip, ChipProps, getKeyValue, colors } from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Tooltip, ChipProps, getKeyValue, colors, Button, useDisclosure, Modal, ModalContent, ModalHeader, Input, ModalBody, ModalFooter } from "@nextui-org/react";
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { URL } from '../URLs';
 import type { Column } from './Columns';
 import { articleColumns, modColumns, analystColumns, rejectedColumns, tags } from './Columns';
+import UpdateFormModal from "./UpdateFormModal";
+import { updateData } from "./UpdateFormModal";
 
 //Generate a NEXUI table of data from a backend collection
 export default function AdminTable({ collection } : { collection : string}) {
     const [showRows, setShowRows] = useState();
+    const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
     let columns: Column[] = [];
-
     columns = getColumns(collection);
     
     //Run on first render of state
     useEffect(() => {
-        pullCollection(collection, setShowRows);
-    }, [])
+        generateRows(collection, setShowRows);
+    }, []);
 
     return (
-        <Table color={"primary"}
-        selectionMode="single"
-        aria-label="Collection table">
-            <TableHeader columns={columns}>
-                {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
-            </TableHeader>
-            <TableBody emptyContent={"No data to display."}>
-                {showRows!}
-            </TableBody>
-        </Table>
+        <>
+            <Table aria-label="Collection table"
+            color={"primary"}
+            selectionMode="single"
+            selectionBehavior="toggle"
+            onRowAction={(key) => {
+                var id : string = JSON.parse(JSON.stringify(key));
+                updateData(id, collection);
+                onOpen();
+            }} >
+                <TableHeader columns={columns}>
+                    {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+                </TableHeader>
+                <TableBody emptyContent={"No data to display."}>
+                    {showRows!}
+                </TableBody>
+            </Table>
+            <UpdateFormModal isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}/>
+            
+        </>
     );
 }
 
@@ -61,7 +73,7 @@ function getColumns(collectionString : string) {
 }
 
 //Pull from backend and generate rows
-function pullCollection(collection : string, setShowRows : React.Dispatch<React.SetStateAction<undefined>>) {
+function generateRows(collection : string, setShowRows : React.Dispatch<React.SetStateAction<undefined>>) {
     let displayData;
 
     fetch(URL.url + '/' + collection)
@@ -78,14 +90,14 @@ function pullCollection(collection : string, setShowRows : React.Dispatch<React.
         })
         setShowRows(displayData);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.log("Unable to retrieve data from backend."));
 }
 
 //Separate array values in the JSON
 function commaSeparateValues(row : any) {
-    Object.keys(row).forEach(function(v : any) {
-        if (Array.isArray(row[v])) {
-            row[v] = row[v].join(', ');
+    Object.keys(row).forEach(function(value : any) {
+        if (Array.isArray(row[value])) {
+            row[value] = row[value].join(', ');
         }
     });
 }
