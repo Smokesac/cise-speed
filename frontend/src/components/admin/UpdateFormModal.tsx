@@ -1,10 +1,12 @@
 import React from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link} from "@nextui-org/react";
+import type { Column } from './Columns';
+import { getColumns } from "./AdminTable";
 
-var data : DataInfo;
+var rowData : RowData;
 
 //Stores required collection and document id
-class DataInfo {
+class RowData {
   documentId: string = "";
   collection: string = "";
  
@@ -18,32 +20,28 @@ class DataInfo {
 
 //Update the selected data on the selected item
 export function updateData(id : string, collection: string) {
-  data = new DataInfo(id, collection);
+  rowData = new RowData(id, collection);
+  generateInputs();
 }
 
 //Display a form modal for a row
 export default function UpdateFormModal({ isOpen, onOpen, onOpenChange} : { isOpen : boolean, onOpen : Function, onOpenChange : () => void}) {
+  var inputs = generateInputs();
 
   return (
     <Modal 
     isOpen={isOpen} 
     onOpenChange={onOpenChange}
-    placement="top-center"
+    placement="center"
+    size="5xl"
+    scrollBehavior="inside"
     >
     <ModalContent>
         {(onClose) => (
         <>
-            <ModalHeader className="flex flex-col gap-1">Update record {data.documentId}</ModalHeader>
+            <ModalHeader className="flex flex-col gap-1">Update Record</ModalHeader>
             <ModalBody>
-            <Input
-                autoFocus
-                label="Email"
-                variant="bordered"
-            />
-            <Input
-                label="Password"
-                variant="bordered"
-            />
+              {inputs}
             </ModalBody>
             <ModalFooter>
             <Button color="danger" variant="flat" onPress={onClose}>
@@ -58,4 +56,26 @@ export default function UpdateFormModal({ isOpen, onOpen, onOpenChange} : { isOp
     </ModalContent>
     </Modal>
   );
+}
+
+//Generate the form's inputs
+function generateInputs() {
+  let columns: Column[] = [];
+  let inputs;
+
+  if (rowData == null) {
+    return <></>;
+  }
+
+  columns = getColumns(rowData.collection);
+  inputs = columns.map(function(column : Column) {
+    return (
+        <Input
+            label={column.label}
+            variant="bordered"
+        />
+    )
+  });
+  
+  return inputs;
 }

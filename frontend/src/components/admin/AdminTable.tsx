@@ -1,9 +1,9 @@
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Tooltip, ChipProps, getKeyValue, colors, Button, useDisclosure, Modal, ModalContent, ModalHeader, Input, ModalBody, ModalFooter } from "@nextui-org/react";
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { URL } from '../URLs';
-import type { Column } from './Columns';
-import { articleColumns, modColumns, analystColumns, rejectedColumns, tags } from './Columns';
+import React from "react";
+import { useState, useEffect } from "react";
+import { URL } from "../URLs";
+import type { Column } from "./Columns";
+import { articleColumns, modColumns, analystColumns, rejectedColumns, tags } from "./Columns";
 import UpdateFormModal from "./UpdateFormModal";
 import { updateData } from "./UpdateFormModal";
 
@@ -45,28 +45,24 @@ export default function AdminTable({ collection } : { collection : string}) {
 }
 
 //Return table columns based on collection
-function getColumns(collectionString : string) {
+export function getColumns(collectionString : string) {
     let columns: Column[] = [];
 
-    switch (collectionString) {
-        case 'articles': {
-            columns = articleColumns;
-        }
-        case 'modArticles': {
-            columns = modColumns;
-        }
-        case 'analystArticles': {
-            columns = analystColumns;
-        }
-        case 'rejectedArticles': {
-            columns = rejectedColumns;
-        }
-        case 'tags': {
-            columns = tags;
-        }
-        default: {
-            columns = articleColumns;
-        }
+    //switch statement does not function properly
+    if (collectionString == 'modArticles') {
+        columns = modColumns;
+    }
+    else if (collectionString == 'analystArticles') {
+        columns = analystColumns;
+    }
+    else if (collectionString == 'rejectedArticles') {
+        columns = rejectedColumns;
+    }
+    else if (collectionString == 'tags') {
+        columns = tags;
+    }
+    else {
+        columns = articleColumns;
     }
 
     return columns;
@@ -76,7 +72,7 @@ function getColumns(collectionString : string) {
 function generateRows(collection : string, setShowRows : React.Dispatch<React.SetStateAction<undefined>>) {
     let displayData;
 
-    fetch(URL.url + '/' + collection)
+    fetch(URL.url + "/" + collection)
     .then(response => response.json())
     .then(responseData => {
         displayData = responseData.map(function(row : any) {
@@ -87,7 +83,7 @@ function generateRows(collection : string, setShowRows : React.Dispatch<React.Se
                     {(columnKey) => <TableCell>{getKeyValue(row, columnKey)}</TableCell>}
                 </TableRow>
             )
-        })
+        });
         setShowRows(displayData);
     })
     .catch((err) => console.log("Unable to retrieve data from backend."));
@@ -97,7 +93,7 @@ function generateRows(collection : string, setShowRows : React.Dispatch<React.Se
 function commaSeparateValues(row : any) {
     Object.keys(row).forEach(function(value : any) {
         if (Array.isArray(row[value])) {
-            row[value] = row[value].join(', ');
+            row[value] = row[value].join(", ");
         }
     });
 }
