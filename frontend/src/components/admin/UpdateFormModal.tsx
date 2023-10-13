@@ -104,7 +104,7 @@ async function generateInputs(setShowRowData : any) {
             key={column.key}
             label={column.label}
             variant="bordered"
-            value={data[column.key]}
+            defaultValue={data[column.key]}
         />
     )
   });
