@@ -18,7 +18,7 @@ export default function AdminTable({ collection } : { collection : string}) {
     //Run on first render of state
     useEffect(() => {
         generateRows(collection, setShowRows);
-    }, []);
+    }, [isOpen]);
 
     return (
         <>
@@ -81,7 +81,7 @@ function generateRows(collection : string, setShowRows : React.Dispatch<React.Se
             commaSeparateValues(row);
 
             return (
-                <TableRow key={row._id}>
+                <TableRow key={row._id} className="hover:cursor-pointer">
                     {(columnKey) => <TableCell>{getKeyValue(row, columnKey)}</TableCell>}
                 </TableRow>
             )

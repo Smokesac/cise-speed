@@ -3,11 +3,6 @@ import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDis
 import type { Column } from './Columns';
 import { getColumns } from "./AdminTable";
 import { URL } from "../URLs";
-import { IArticle } from "./interfaces/IArticle";
-import { IAnalystArticle } from "./interfaces/IAnalystArticle";
-import { IModArticle } from "./interfaces/IModArticle";
-import { IRejectedArticle } from "./interfaces/IRejectedArticle";
-import { ITag } from "./interfaces/ITag";
 
 var rowInfo : RowInfo;
 
@@ -18,11 +13,9 @@ class RowInfo {
   inputs : any = <></>;
  
   constructor(documentId : string, collection : string, inputs? : any) {
-    if (documentId !== undefined && collection !== undefined) {
       this.documentId = documentId;
       this.collection = collection;
       this.inputs = inputs;
-    }
   }
 }
 
@@ -35,9 +28,13 @@ export function updateData(id : string, collection: string) {
 export default function UpdateFormModal({ isOpen, onOpen, onOpenChange} : { isOpen : boolean, onOpen : Function, onOpenChange : () => void}) {  
   const [showRowData, setShowRowData] = useState();
 
-  //Re-render inputs whenever isOpen state changes
+  //Clear and re-render inputs whenever isOpen state is true
   useEffect(() => {
-    generateInputs(setShowRowData);
+    if (isOpen) {
+      let inputs : any = <></>;
+      setShowRowData(inputs);
+      generateInputs(setShowRowData);
+    }
   }, [isOpen]);
 
   return (
@@ -53,13 +50,15 @@ export default function UpdateFormModal({ isOpen, onOpen, onOpenChange} : { isOp
         <>
             <ModalHeader className="flex flex-col gap-1">Update Record</ModalHeader>
             <ModalBody>
-              {showRowData}
+              <form onSubmit={handleSubmit} id="updateForm">
+                {showRowData}
+              </form>
             </ModalBody>
             <ModalFooter>
             <Button color="danger" variant="flat" onPress={onClose}>
                 Cancel
             </Button>
-            <Button color="primary" onPress={onClose}>
+            <Button color="primary" type="submit" form="updateForm" onClick={onClose}>
                 Update
             </Button>
             </ModalFooter>
@@ -102,13 +101,48 @@ async function generateInputs(setShowRowData : any) {
     return (
         <Input
             key={column.key}
+            name={column.key}
             label={column.label}
             variant="bordered"
             defaultValue={data[column.key]}
+            className="mb-2"
         />
     )
   });
 
   setShowRowData(inputs);
-  return inputs;
+}
+
+//Handle form submission
+function handleSubmit(e : any) {
+  //Prevent the browser from reloading the page
+  e.preventDefault();
+
+  //Read form data
+  const form = e.target;
+  const formData = new FormData(form);
+
+  //Parse data
+  var formJson = Object.fromEntries(formData.entries());
+  commaSeparatedToArray(formJson);
+
+  //Send PUT request
+  fetch(URL.url + "/" + rowInfo.collection + "/" + rowInfo.documentId, {
+    method: 'PUT',
+    body: JSON.stringify(
+      formJson,
+    ),
+    headers: {
+      "content-type": "application/json",
+    },
+  }).catch((err) => console.log("Error:" + err));
+}
+
+//Convert specific comma-separated fields to arrays
+function commaSeparatedToArray(formJson : any) {
+  Object.entries(formJson).forEach(function([key, value] : [key : any, value : any]) {
+    if (key == 'authors' || key == 'tags') {
+      formJson[key] = (value as string).split(',');
+    }
+  })
 }
