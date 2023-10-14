@@ -85,7 +85,7 @@ async function getRowData() {
     data = responseData;
     return (data);
   })
-  .catch((err) => console.log("Error: " + err));
+  .catch((err) => console.log("An error occured while fetching the data: " + err));
 
   return data;
 }
@@ -101,6 +101,10 @@ async function generateInputs(setShowRowData : any) {
 
   //Get data and its headings
   const data : any = await getRowData();
+  if (data == undefined) {
+    return;
+  }
+
   columns = getColumns(rowInfo.collection);
 
   inputs = columns.map(function(column : Column) {
@@ -125,6 +129,13 @@ async function handleSubmit(e : any, onOpen : Function, onOpenChange : () => voi
   //Prevent the browser from reloading the page
   e.preventDefault();
 
+  //If form is open without data
+  if (rowInfo == undefined) {
+    generateReponseMessage(false);
+    onOpenChange();
+    return;
+  }
+
   //Read form data
   const form = e.target;
   const formData = new FormData(form);
@@ -146,7 +157,7 @@ async function handleSubmit(e : any, onOpen : Function, onOpenChange : () => voi
   .then(function(response) {
     generateReponseMessage(response.ok);
   })
-  .catch((err) => console.log("Error:" + err));
+  .catch((err) => console.log("An error occured while sending the request: " + err));
 
   onOpen();
   onOpenChange();
@@ -170,10 +181,9 @@ function generateReponseMessage(success? : boolean) {
   }
   else if (success == true) {
     message = <Chip color="success" className="mb-2">Record updated successfully</Chip>;
-    console.log("success");
   }
   else {
-    message = <Chip color="warning" className="mb-2">Failed to update record</Chip>;
+    message = <Chip color="danger" className="mb-2">Failed to update record</Chip>;
   }
 
   setShowResponse(message);

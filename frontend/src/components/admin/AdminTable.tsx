@@ -21,11 +21,6 @@ export default function AdminTable({ collection } : { collection : string}) {
         generateRows(collection, setShowRows);
     }, [isOpen]);
 
-    //Run on first render of state
-    useEffect(() => {
-        console.log("Updated!");
-    }, [isOkayResponse]);
-
     return (
         <>
             {isOkayResponse}
