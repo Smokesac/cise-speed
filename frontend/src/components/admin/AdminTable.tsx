@@ -41,7 +41,6 @@ export default function AdminTable({ collection } : { collection : string}) {
                 </TableBody>
             </Table>
             <UpdateFormModal isOpen={isOpen} onOpen={onOpen} onOpenChange={onOpenChange}/>
-            
         </>
     );
 }

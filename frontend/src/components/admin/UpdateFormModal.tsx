@@ -25,6 +25,7 @@ export function updateData(id : string, collection: string) {
   rowInfo = new RowInfo(id, collection);
 }
 
+//Set the state changer of the response message
 export function setModalShowResponse(adminSetShowResponse : React.Dispatch<React.SetStateAction<undefined>>) {
   setShowResponse = adminSetShowResponse;
 }
@@ -172,7 +173,7 @@ function commaSeparatedToArray(formJson : any) {
   })
 }
 
-//Generate a message indicating update success
+//Generate a message indicating update success/fail
 function generateReponseMessage(success? : boolean) {
   let message : any;
 
