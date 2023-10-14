@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest --forceExit --openHandlesTimeout 0",
-    "coverage": "jest --coverage"
+    "test": "jest"
   },
   "dependencies": {
     "@nextui-org/react": "^2.1.13",
