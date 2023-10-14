@@ -86,7 +86,7 @@ async function getRowData() {
     data = responseData;
     return (data);
   })
-  .catch();
+  .catch((err) => console.log("Error: " + err));
 
   return data;
 }
@@ -158,7 +158,7 @@ async function handleSubmit(e : any, onOpen : Function, onOpenChange : () => voi
   .then(function(response) {
     generateReponseMessage(response.ok);
   })
-  .catch();
+  .catch((err) => console.log("Error: " + err));
 
   onOpen();
   onOpenChange();

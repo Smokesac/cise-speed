@@ -89,7 +89,7 @@ function generateRows(collection : string, setShowRows : React.Dispatch<React.Se
         });
         setShowRows(displayData);
     })
-    .catch();
+    .catch((err) => console.log("Error: " + err));
 }
 
 //Separate array values in the JSON
