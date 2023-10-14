@@ -85,7 +85,7 @@ async function getRowData() {
     data = responseData;
     return (data);
   })
-  .catch((err) => console.log("An error occured while fetching the data: " + err));
+  .catch();
 
   return data;
 }
@@ -157,7 +157,7 @@ async function handleSubmit(e : any, onOpen : Function, onOpenChange : () => voi
   .then(function(response) {
     generateReponseMessage(response.ok);
   })
-  .catch((err) => console.log("An error occured while sending the request: " + err));
+  .catch();
 
   onOpen();
   onOpenChange();

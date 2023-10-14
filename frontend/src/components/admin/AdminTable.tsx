@@ -90,7 +90,7 @@ function generateRows(collection : string, setShowRows : React.Dispatch<React.Se
         });
         setShowRows(displayData);
     })
-    .catch((err) => console.log("Unable to retrieve data from backend."));
+    .catch();
 }
 
 //Separate array values in the JSON

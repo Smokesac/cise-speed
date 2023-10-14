@@ -5,9 +5,19 @@ import { describe } from 'node:test';
 import AdminPage from '@/src/pages/admin';
 
 describe('Admin page', () => {
-    it('Should render properly', () => {
+    it('Should render tabs', () => {
         render(<AdminPage />);
+        
+        const tabs = screen.getByRole("tablist");
 
-        //const tabs = screen.getByRole();
+        expect(tabs).toBeInTheDocument();
+    });
+
+    it('Should render the table', () => {
+        render(<AdminPage />);
+        
+        const table = screen.getByRole("grid");
+
+        expect(table).toBeInTheDocument();
     });
 });

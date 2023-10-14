@@ -9,9 +9,10 @@ export default function AdminPage() {
   return (
     <div className="flex w-full flex-col z-0">
     <Tabs 
-      aria-label="Options"         
+      aria-label="Collections"         
       selectedKey={selected}
       onSelectionChange={setSelected}
+      id="collection-switcher"
     >
       <Tab key="articles" title="Articles">
         <Card>
