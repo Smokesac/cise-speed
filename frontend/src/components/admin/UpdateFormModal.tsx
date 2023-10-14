@@ -50,7 +50,7 @@ export default function UpdateFormModal({ isOpen, onOpen, onOpenChange} : { isOp
         <>
             <ModalHeader className="flex flex-col gap-1">Update Record</ModalHeader>
             <ModalBody>
-              <form onSubmit={handleSubmit} id="updateForm">
+              <form onSubmit={event => handleSubmit(event, onOpen, onOpenChange)} id="updateForm">
                 {showRowData}
               </form>
             </ModalBody>
@@ -58,7 +58,7 @@ export default function UpdateFormModal({ isOpen, onOpen, onOpenChange} : { isOp
             <Button color="danger" variant="flat" onPress={onClose}>
                 Cancel
             </Button>
-            <Button color="primary" type="submit" form="updateForm" onClick={onClose}>
+            <Button color="primary" type="submit" form="updateForm">
                 Update
             </Button>
             </ModalFooter>
@@ -114,7 +114,8 @@ async function generateInputs(setShowRowData : any) {
 }
 
 //Handle form submission
-function handleSubmit(e : any) {
+async function handleSubmit(e : any, onOpen : Function, onOpenChange : () => void) {
+
   //Prevent the browser from reloading the page
   e.preventDefault();
 
@@ -127,7 +128,7 @@ function handleSubmit(e : any) {
   commaSeparatedToArray(formJson);
 
   //Send PUT request
-  fetch(URL.url + "/" + rowInfo.collection + "/" + rowInfo.documentId, {
+  await fetch(URL.url + "/" + rowInfo.collection + "/" + rowInfo.documentId, {
     method: 'PUT',
     body: JSON.stringify(
       formJson,
@@ -135,7 +136,11 @@ function handleSubmit(e : any) {
     headers: {
       "content-type": "application/json",
     },
-  }).catch((err) => console.log("Error:" + err));
+  }
+  ).catch((err) => console.log("Error:" + err));
+
+  onOpen();
+  onOpenChange();
 }
 
 //Convert specific comma-separated fields to arrays
