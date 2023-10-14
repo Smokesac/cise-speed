@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link} from "@nextui-org/react";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link, Chip} from "@nextui-org/react";
 import type { Column } from './Columns';
 import { getColumns } from "./AdminTable";
 import { URL } from "../URLs";
 
 var rowInfo : RowInfo;
+var setShowResponse : React.Dispatch<React.SetStateAction<undefined>>;
 
 //Stores required collection and document id
 class RowInfo {
@@ -24,16 +25,21 @@ export function updateData(id : string, collection: string) {
   rowInfo = new RowInfo(id, collection);
 }
 
+export function setModalShowResponse(adminSetShowResponse : React.Dispatch<React.SetStateAction<undefined>>) {
+  setShowResponse = adminSetShowResponse;
+}
+
 //Display a form modal for a row
 export default function UpdateFormModal({ isOpen, onOpen, onOpenChange} : { isOpen : boolean, onOpen : Function, onOpenChange : () => void}) {  
   const [showRowData, setShowRowData] = useState();
 
-  //Clear and re-render inputs whenever isOpen state is true
+  //Clear and re-render inputs and message whenever isOpen state is true
   useEffect(() => {
     if (isOpen) {
       let inputs : any = <></>;
       setShowRowData(inputs);
       generateInputs(setShowRowData);
+      generateReponseMessage();
     }
   }, [isOpen]);
 
@@ -136,8 +142,11 @@ async function handleSubmit(e : any, onOpen : Function, onOpenChange : () => voi
     headers: {
       "content-type": "application/json",
     },
-  }
-  ).catch((err) => console.log("Error:" + err));
+  })
+  .then(function(response) {
+    generateReponseMessage(response.ok);
+  })
+  .catch((err) => console.log("Error:" + err));
 
   onOpen();
   onOpenChange();
@@ -150,4 +159,22 @@ function commaSeparatedToArray(formJson : any) {
       formJson[key] = (value as string).split(',');
     }
   })
+}
+
+//Generate a message indicating update success
+function generateReponseMessage(success? : boolean) {
+  let message : any;
+
+  if (success == undefined) {
+    message = <></>;
+  }
+  else if (success == true) {
+    message = <Chip color="success" className="mb-2">Record updated successfully</Chip>;
+    console.log("success");
+  }
+  else {
+    message = <Chip color="warning" className="mb-2">Failed to update record</Chip>;
+  }
+
+  setShowResponse(message);
 }

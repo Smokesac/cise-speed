@@ -4,24 +4,31 @@ import { useState, useEffect } from "react";
 import { URL } from "../URLs";
 import type { Column } from "./Columns";
 import { articleColumns, modColumns, analystColumns, rejectedColumns, tags } from "./Columns";
-import UpdateFormModal from "./UpdateFormModal";
-import { updateData } from "./UpdateFormModal";
+import UpdateFormModal, { setModalShowResponse, updateData } from "./UpdateFormModal";
 
 //Generate a NEXUI table of data from a backend collection
 export default function AdminTable({ collection } : { collection : string}) {
     const [showRows, setShowRows] = useState();
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const [isOkayResponse, setShowResponse] = useState();
+    setModalShowResponse(setShowResponse);
 
     let columns: Column[] = [];
     columns = getColumns(collection);
     
-    //Run on first render of state
+    //Run whenever onOpen state changes
     useEffect(() => {
         generateRows(collection, setShowRows);
     }, [isOpen]);
 
+    //Run on first render of state
+    useEffect(() => {
+        console.log("Updated!");
+    }, [isOkayResponse]);
+
     return (
         <>
+            {isOkayResponse}
             <Table aria-label="Collection table"
             color={"primary"}
             selectionMode="single"
