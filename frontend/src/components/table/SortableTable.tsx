@@ -33,53 +33,88 @@ const sortTable = (
     setSortHeader(header.key);
 };
 
-const filterTable = (event: FormEvent, setFilter: Function) => {
+const setNewFilter = (event: FormEvent, header: { key: string; label: string }, filter: any, setFilter: Function) => {
     event.preventDefault();
-    const node: any = event.target;
-    setFilter(node.value);
+    const inputTag: any = event.target;
+    const value: string = inputTag.value;
+
+    // copy current filter to not change the original filter
+    let newFilter = {...filter};
+    newFilter[header.key] = value;
+    setFilter(newFilter);
 };
 
+function getIntersectedKeys(o1: object, o2: object){
+    // filter in keys from object 1 when object 2 has it
+    return Object.keys(o1).filter(k => Object.hasOwn(o2, k))
+}
+
+function filterRow(row: Object, filter: Object | undefined): boolean {
+    // do not process undefined or empty filter
+    if (filter === undefined) {
+        // filter in this row
+        return true;
+    }
+
+    if (Object.keys(filter).length === 0) {
+        return true;
+    }
+
+    // find intersected headers between filters and row
+    const intersectedHeaders = getIntersectedKeys(row, filter);
+
+    // check if all filters pass
+    //      for every header...
+    const allFiltersPassed = intersectedHeaders.every(header => {
+        // ...get row value
+        const rowValue = Object.entries(row).find(kvp => kvp[0] === header)![1];
+        // ...get filter value
+        const filterValue = Object.entries(filter).find(kvp => kvp[0] === header)![1];
+        // ...compare if row value contains filter value case-insensitive
+        const passedFilter = (rowValue.toLowerCase()).includes(filterValue.toLowerCase());
+        return passedFilter;
+    });
+    return allFiltersPassed;
+}
+
 const SortableTable: React.FC<SortableTableProps> = ({ headers, data }) => {
-    const [filter, setFilter] = useState("");
+    const [filter, setFilter] = useState({});
     const [sortHeader, setSortHeader] = useState("");
     const [sortOrder, setSortOrder] = useState("");
     return (
         <>
-            <input type="text" style={{width:"350px"}} onInput={(e) => filterTable(e, setFilter)} />
+            
             <table>
                 <thead>
                     <tr>
                         {headers.map((header) => (
                             <th key={header.key}>
-                                {header.label} 
-                                <button onClick={() => sortTable(header, setSortHeader, setSortOrder, sortHeader, sortOrder)}>&gt;</button>
+                                <div>{header.label}</div> 
+                                <div><input type="text" onInput={(e) => setNewFilter(e, header, filter, setFilter)} /></div>
+                                <div><button onClick={() => sortTable(header, setSortHeader, setSortOrder, sortHeader, sortOrder)}>&gt;</button></div>
                             </th>
                         ))}
                     </tr>
                 </thead>
                 <tbody>
-                    {data.filter((row) => {
-                        // get values from row
-                        let values = Object.values(row);
-                        // keep if some row value includes filter value (case insensitive)
-                        return values.some((v: any) => v.toLowerCase().includes(filter.toLowerCase()));
-                    })
-                    .sort((row1, row2) => {
-                        // Rows are equal, sort order does not matter
-                        if (row1[sortHeader] == row2[sortHeader]) {
-                            return 0;
-                        }
-                        
-                        // If sort order is ascending
-                        if (sortOrder == "asc") {
-                            // compare them in the right order
-                            return row1[sortHeader] > row2[sortHeader] ? 1 : -1;
-                        }
-                        // If sort order is descending
-                        else {
-                            // compare them in reverse order
-                            return row1[sortHeader] > row2[sortHeader] ? -1 : 1;
-                        }
+                    {data
+                        .filter((row) => filterRow(row, filter))
+                        .sort((row1, row2) => {
+                            // Rows are equal, sort order does not matter
+                            if (row1[sortHeader] == row2[sortHeader]) {
+                                return 0;
+                            }
+                            
+                            // If sort order is ascending
+                            if (sortOrder == "asc") {
+                                // compare them in the right order
+                                return row1[sortHeader] > row2[sortHeader] ? 1 : -1;
+                            }
+                            // If sort order is descending
+                            else {
+                                // compare them in reverse order
+                                return row1[sortHeader] > row2[sortHeader] ? -1 : 1;
+                            }
                     })
                     .map((row, i) => (
                         <tr key={i}>
