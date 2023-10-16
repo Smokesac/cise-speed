@@ -2,15 +2,17 @@ import React from "react";
 import AdminTable from '../components/admin/AdminTable';
 import {Tabs, Tab, Card, CardBody, CardHeader} from "@nextui-org/react";
 
+//Show a tab switcher and the table for that tab
 export default function AdminPage() {
   const [selected, setSelected] : any = React.useState("articles");
 
   return (
-    <div className="flex w-full flex-col">
+    <div className="flex w-full flex-col z-0">
     <Tabs 
-      aria-label="Options"         
+      aria-label="Collections"         
       selectedKey={selected}
       onSelectionChange={setSelected}
+      id="collection-switcher"
     >
       <Tab key="articles" title="Articles">
         <Card>
