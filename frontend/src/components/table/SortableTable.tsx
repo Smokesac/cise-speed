@@ -1,126 +1,132 @@
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
+
 
 interface SortableTableProps {
-  headers: { key: string; label: string }[];
-  data: any[];
+    headers: { key: string; label: string }[];
+    data: any[];
+}
+
+const sortTable = (
+    header: { key: string; label: string }, 
+    setSortHeader: Function, 
+    setSortOrder: Function, 
+    sortHeader: string, 
+    sortOrder: string) => 
+{
+    // ""=no sorting, "asc"=ascending(по увеличению), "desc"= descending(по уменьшению)
+    // "" -> "asc"
+    // "asc" -> "desc"
+    // "desc" -> "asc"
+    // If columns changed, always use asc
+    if (header.key != sortHeader) {
+        setSortOrder("asc");
+    }
+    // If cloumns not changed, swap sort order
+    else {
+        if (sortOrder == "" || sortOrder == "desc") {
+            setSortOrder("asc");
+        }
+        else if (sortOrder == "asc") {
+            setSortOrder("desc");
+        }
+    }
+    setSortHeader(header.key);
+};
+
+const setNewFilter = (event: FormEvent, header: { key: string; label: string }, filter: any, setFilter: Function) => {
+    event.preventDefault();
+    const inputTag: any = event.target;
+    const value: string = inputTag.value;
+
+    // copy current filter to not change the original filter
+    let newFilter = {...filter};
+    newFilter[header.key] = value;
+    setFilter(newFilter);
+};
+
+function getIntersectedKeys(o1: object, o2: object){
+    // filter in keys from object 1 when object 2 has it
+    return Object.keys(o1).filter(k => Object.hasOwn(o2, k))
+}
+
+function filterRow(row: Object, filter: Object | undefined): boolean {
+    // do not process undefined or empty filter
+    if (filter === undefined) {
+        // filter in this row
+        return true;
+    }
+
+    if (Object.keys(filter).length === 0) {
+        return true;
+    }
+
+    // find intersected headers between filters and row
+    const intersectedHeaders = getIntersectedKeys(row, filter);
+
+    // check if all filters pass
+    //      for every header...
+    const allFiltersPassed = intersectedHeaders.every(header => {
+        // ...get row value
+        const rowValue = Object.entries(row).find(kvp => kvp[0] === header)![1];
+        // ...get filter value
+        const filterValue = Object.entries(filter).find(kvp => kvp[0] === header)![1];
+        // ...compare if row value contains filter value case-insensitive
+        const passedFilter = (rowValue.toLowerCase()).includes(filterValue.toLowerCase());
+        return passedFilter;
+    });
+    return allFiltersPassed;
 }
 
 const SortableTable: React.FC<SortableTableProps> = ({ headers, data }) => {
-  const [sortHeader, setSortHeader] = useState("");
-  const [sortOrder, setSortOrder] = useState("");
-  const [searchHistory, setSearchHistory] = useState<string[]>([]);
-  const [currentSearchTerm, setCurrentSearchTerm] = useState<string>("");
-  const [filteredData, setFilteredData] = useState<any[]>(data);
-
-  const sortTable = (
-    header: { key: string; label: string },
-    setSortHeader: Function,
-    setSortOrder: Function,
-    sortOrder: string
-  ) => {
-    let newSortOrder = sortOrder === "asc" ? "desc" : "asc";
-    setSortOrder(newSortOrder);
-    setSortHeader(header.key);
-
-    // Update the filtered data with the sorted order
-    setFilteredData((prevData) => {
-      return [...prevData].sort((row1, row2) => {
-        const value1 = row1[header.key];
-        const value2 = row2[header.key];
-
-        if (value1 === value2) {
-          return 0;
-        }
-
-        if (newSortOrder === "asc") {
-          return value1 > value2 ? 1 : -1;
-        } else {
-          return value1 > value2 ? -1 : 1;
-        }
-      });
-    });
-  };
-
-  const handleSearch = () => {
-    if (currentSearchTerm.trim() !== "") {
-      setSearchHistory((prevHistory) => [...prevHistory, currentSearchTerm]);
-
-      // Perform filtering based on the search term
-      const newFilteredData = data.filter((row) => {
-        const values = Object.values(row);
-        return values.some((v: any) =>
-          v.toString().toLowerCase().includes(currentSearchTerm.toLowerCase())
-        );
-      });
-
-      setFilteredData(newFilteredData);
-    } else {
-      // If the search term is empty, show the entire dataset
-      setFilteredData(data);
-    }
-  };
-
-  //Clear the search field
-  const handleClear = () => {
-    // Reset the search term and show the entire dataset
-    setCurrentSearchTerm("");
-    setFilteredData(data);
-  
-    // Clear the search bar text
-    const inputElement = document.querySelector('input[type="text"]') as HTMLInputElement;
-    if (inputElement) {
-      inputElement.value = "";
-    }
-  };
-  
-
-  return (
-    <>
-      <div>
-        <input
-          type="text"
-          style={{ width: "350px" }}
-          placeholder="Search..."
-          list="searchHistoryList"
-          onChange={(e) => setCurrentSearchTerm(e.target.value)}
-        />
-        <datalist id="searchHistoryList">
-          {searchHistory
-            .filter((term) => term.includes(currentSearchTerm))
-            .map((term, index) => (
-              <option key={index} value={term} />
-            ))}
-        </datalist>
-        <button onClick={handleSearch}>Search</button>
-        <button onClick={handleClear}>Reset</button>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            {headers.map((header) => (
-              <th key={header.key}>
-                {header.label}
-                <button
-                  onClick={() => sortTable(header, setSortHeader, setSortOrder, sortOrder)}
-                >
-                  &gt;
-                </button>
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {filteredData.map((row, i) => (
-            <tr key={i}>
-              {headers.map((header) => (
-                <td key={header.key}>{row[header.key]}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </>
-  );
-};
+    const [filter, setFilter] = useState({});
+    const [sortHeader, setSortHeader] = useState("");
+    const [sortOrder, setSortOrder] = useState("");
+    return (
+        <>
+            
+            <table>
+                <thead>
+                    <tr>
+                        {headers.map((header) => (
+                            <th key={header.key}>
+                                <div>{header.label}</div> 
+                                <div><input type="text" onInput={(e) => setNewFilter(e, header, filter, setFilter)} /></div>
+                                <div><button onClick={() => sortTable(header, setSortHeader, setSortOrder, sortHeader, sortOrder)}>&gt;</button></div>
+                            </th>
+                        ))}
+                    </tr>
+                </thead>
+                <tbody>
+                    {data
+                        .filter((row) => filterRow(row, filter))
+                        .sort((row1, row2) => {
+                            // Rows are equal, sort order does not matter
+                            if (row1[sortHeader] == row2[sortHeader]) {
+                                return 0;
+                            }
+                            
+                            // If sort order is ascending
+                            if (sortOrder == "asc") {
+                                // compare them in the right order
+                                return row1[sortHeader] > row2[sortHeader] ? 1 : -1;
+                            }
+                            // If sort order is descending
+                            else {
+                                // compare them in reverse order
+                                return row1[sortHeader] > row2[sortHeader] ? -1 : 1;
+                            }
+                    })
+                    .map((row, i) => (
+                        <tr key={i}>
+                            {headers.map((header) => (
+                                <td key={header.key}>{row[header.key]}</td>
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </>
+    );
+}
 
 export default SortableTable;
