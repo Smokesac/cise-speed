@@ -49,7 +49,7 @@ export const getServerSideProps: GetServerSideProps = async (
 // Update the component
 const ArticleDetails: React.FC<{ article: any }> = ({ article }) => {
   if (!article) {
-    return <div>Article not found</div>;
+    return <h1>Article not found</h1>;
   }
 
   return (
