@@ -28,3 +28,74 @@
     flex-grow: 0;
     font-size: 1.5em;
 }
+
+
+.authorButton {
+    /* Your existing button styles */
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+  
+    /* Additional styles for the "Add Author" button */
+    &:hover {
+      background-color: #45a049;
+    }
+  
+    &:focus {
+      outline: none;
+    }
+  }
+
+  
+.buttonItem {
+  /* Your existing button styles */
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+
+  /* Additional styles for the "Add Author" button */
+  &:hover {
+    background-color: #45a049;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+/* Form.module.scss */
+
+.removeAuthorButton {
+    /* Specific styles for the "Remove Author" button */
+    background-color: #ff3333; /* Red color */
+    color: white;
+    font-size: 14px; /* Adjust font size */
+    padding: 5px 10px; /* Adjust padding to make it smaller */
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+
+    &:hover {
+        background-color: #cc0000; /* Darker red color on hover */
+    }
+
+    &:focus {
+        outline: none;
+    }
+}

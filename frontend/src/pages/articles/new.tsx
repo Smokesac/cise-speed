@@ -1,51 +1,67 @@
-import { FormEvent, useState } from "react";
+import React, { FormEvent, useState } from "react";
+import axios from "axios";
 import formStyles from "../../../styles/Form.module.scss";
+import { URL } from "../../components/URLs";
 
 const NewDiscussion = () => {
     const [title, setTitle] = useState("");
     const [authors, setAuthors] = useState<string[]>([]);
-    const [source, setSource] = useState("");
-    const [pubYear, setPubYear] = useState<number>(0);
+    const [journal, setJournal] = useState("");
+    const [volume, setVolume] = useState("");
+    const [numberPages, setNumberPages] = useState<number>(0);
+    const [publicationYear, setPublicationYear] = useState<number>(0);
     const [doi, setDoi] = useState("");
-    const [summary, setSummary] = useState("");
-    const [linkedDiscussion, setLinkedDiscussion] = useState("");
+    const [submitterId, setSubmitterId] = useState("");
     
+    const [submissionStatus, setSubmissionStatus] = useState("");
+    const [missingFields, setMissingFields] = useState<string[]>([]);
+
     const submitNewArticle = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log(
-            JSON.stringify({
-                title,
-                authors,
-                source,
-                publication_year: pubYear,
-                doi,
-                summary,
-                linked_discussion: linkedDiscussion,
-            })
-        );
+
+        // Validate fields
+        const requiredFields = ["title", "authors", "journal", "volume", "numberPages", "publicationYear", "doi", "submitterId"];
+        const invalidFields = requiredFields.filter(field => !eval(field));
+
+        if (invalidFields.length > 0) {
+            setSubmissionStatus("fail");
+            setMissingFields(invalidFields);
+        } else {
+            try {
+                // Send a POST request to your API endpoint
+                const response = await axios.post(URL.url + "/modArticles", {
+                    title,
+                    authors,
+                    journal,
+                    volume,
+                    numberPages,
+                    publicationYear,
+                    doi,
+                    submitterId,
+                });
+
+                
+            } catch (error) {
+                console.error("Error:", error);
+                setSubmissionStatus("fail");
+            }
+        }
     };
 
-    // Some helper methods for the authors array
     const addAuthor = () => {
-        setAuthors(authors.concat([""]));
+        // Add an empty string to the authors array
+        setAuthors([...authors, ""]);
     };
 
-    const removeAuthor = (index: number) => {
-        setAuthors(authors.filter((_, i) => i !== index));
-    };
-                
     const changeAuthor = (index: number, value: string) => {
-        setAuthors(
-            authors.map((oldValue, i) => {
-                return index === i ? value : oldValue;
-            })
-        );
+        // Update the authors array with the modified value at the given index
+        setAuthors(authors.map((oldValue, i) => (i === index ? value : oldValue)));
     };
-                
-    // Return the full form
+
     return (
         <div className="container">
             <h1>New Article</h1>
+
             <form className={formStyles.form} onSubmit={submitNewArticle}>
                 <label htmlFor="title">Title:</label>
                 <input
@@ -54,69 +70,78 @@ const NewDiscussion = () => {
                     name="title"
                     id="title"
                     value={title}
-                    onChange={(event) => {
-                        setTitle(event.target.value);
-                    }}
+                    onChange={(event) => setTitle(event.target.value)}
+                    required
                 />
-        
-                <label htmlFor="author">Authors:</label>
-                {authors.map((author, index) => {
-                    return (
-                        <div key={`author ${index}`} className={formStyles.arrayItem}>
-                            <input
-                                type="text"
-                                name="author"
-                                value={author}
-                                onChange={(event) => changeAuthor(index, event.target.value)}
-                                className={formStyles.formItem}
-                            />
+
+<label htmlFor="authors">Authors:</label>
+                {authors.map((author, index) => (
+                    <div key={`author-${index}`} className={formStyles.arrayItem}>
+                        <input
+                            type="text"
+                            name={`author-${index}`}
+                            value={author}
+                            onChange={(event) => changeAuthor(index, event.target.value)}
+                            className={formStyles.formItem}
+                            required
+                        />
+                        {index > 0 && ( // Show remove button for additional authors
                             <button
-                                onClick={() => removeAuthor(index)}
-                                className={formStyles.buttonItem}
-                                style={{ marginLeft: "3rem" }}
+                                onClick={() => setAuthors(authors.filter((_, i) => i !== index))}
+                                className={formStyles.removeAuthorButton}
                                 type="button"
                             >
-                                -
+                                Remove
                             </button>
-                        </div>
-                    );
-                })}
-                <button
-                    onClick={() => addAuthor()}
-                    className={formStyles.buttonItem}
-                    style={{ marginLeft: "auto" }}
-                    type="button"
-                >
-                    +
+                        )}
+                    </div>
+                ))}
+                <button onClick={addAuthor} className={formStyles.authorButton} type="button">
+                    Add Author
                 </button>
 
-                <label htmlFor="source">Source:</label>
+                <label htmlFor="journal">Journal:</label>
                 <input
                     className={formStyles.formItem}
                     type="text"
-                    name="source"
-                    id="source"
-                    value={source}
-                    onChange={(event) => {
-                        setSource(event.target.value);
-                    }}
+                    name="journal"
+                    id="journal"
+                    value={journal}
+                    onChange={(event) => setJournal(event.target.value)}
+                    required
                 />
 
-                <label htmlFor="pubYear">Publication Year:</label>
+                <label htmlFor="volume">Volume:</label>
+                <input
+                    className={formStyles.formItem}
+                    type="text"
+                    name="volume"
+                    id="volume"
+                    value={volume}
+                    onChange={(event) => setVolume(event.target.value)}
+                    required
+                />
+
+                <label htmlFor="numberPages">Number of Pages:</label>
                 <input
                     className={formStyles.formItem}
                     type="number"
-                    name="pubYear"
-                    id="pubYear"
-                    value={pubYear}
-                    onChange={(event) => {
-                        const val = event.target.value;
-                        if (val === "") {
-                            setPubYear(0);
-                        } else {
-                            setPubYear(parseInt(val));
-                        }
-                    }}
+                    name="numberPages"
+                    id="numberPages"
+                    value={numberPages}
+                    onChange={(event) => setNumberPages(parseInt(event.target.value))}
+                    required
+                />
+
+                <label htmlFor="publicationYear">Publication Year:</label>
+                <input
+                    className={formStyles.formItem}
+                    type="number"
+                    name="publicationYear"
+                    id="publicationYear"
+                    value={publicationYear}
+                    onChange={(event) => setPublicationYear(parseInt(event.target.value))}
+                    required
                 />
 
                 <label htmlFor="doi">DOI:</label>
@@ -126,19 +151,21 @@ const NewDiscussion = () => {
                     name="doi"
                     id="doi"
                     value={doi}
-                    onChange={(event) => {
-                        setDoi(event.target.value);
-                    }}
+                    onChange={(event) => setDoi(event.target.value)}
+                    required
                 />
 
-                <label htmlFor="summary">Summary:</label>
-                <textarea
-                    className={formStyles.formTextArea}
-                    name="summary"
-                    value={summary}
-                    onChange={(event) => setSummary(event.target.value)}
+                <label htmlFor="submitterId">Submitter ID:</label>
+                <input
+                    className={formStyles.formItem}
+                    type="text"
+                    name="submitterId"
+                    id="submitterId"
+                    value={submitterId}
+                    onChange={(event) => setSubmitterId(event.target.value)}
+                    required
                 />
-                
+
                 <button className={formStyles.formItem} type="submit">
                     Submit
                 </button>
@@ -146,6 +173,5 @@ const NewDiscussion = () => {
         </div>
     );
 };
-
 
 export default NewDiscussion;
