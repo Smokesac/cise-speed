@@ -7,10 +7,10 @@ export default function SubmissionForm() {
     const onSubmit = (data: any) => JSON.stringify(data);
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} name="Article submission form">
             <input {...register("title")} placeholder="Title" />
             <p>
-                <input {...register("authors")} placeholder="Authors" />
+                <input {...register("authors")} placeholder="Authors" name="Authors input"/>
             </p>
             <p>
                 <input {...register("source")} placeholder="Source" />

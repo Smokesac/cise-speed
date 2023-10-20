@@ -94,7 +94,6 @@ const SortableTable: React.FC<SortableTableProps> = ({ headers, data }) => {
   return (
     <>
       <table className={styles.table}>
-        {" "}
         {/* Use the styles here */}
         <thead>
           <tr>
