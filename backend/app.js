@@ -9,7 +9,7 @@ connectDB();
 
 app.use(
   cors({
-    origin: ['*'],
+    origin: ['www.thisisatest.com'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
   }),
@@ -17,7 +17,7 @@ app.use(
 
 app.enableCors();
 
-app.get('/', (req, res) => res.send('CISE SPEED Backend'));
+app.get('/', (req, res) => res.send('Hello world!'));
 
 const port = process.env.PORT || 8082;
 
