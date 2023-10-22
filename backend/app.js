@@ -11,8 +11,8 @@ app.get('/', (req, res) => res.send('Hello world!'));
 // cors
 app.use(cors(
     { 
-        origin: ["https://cise-speed-frontend.vercel.app"],
-        methods: ["GET","OPTIONS","PATCH","DELETE","POST","PUT"], 
+        origin: ["*"],
+        methods: ["GET","DELETE","POST","PUT"], 
         credentials: true 
     }
 ));
