@@ -7,12 +7,13 @@ const app = express();
 // Connect Database
 connectDB();
 
-app.use(cors(
-{ 
-    origin: ["https://cise-speed-frontend.vercel.app"],
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"], 
-    credentials: true 
-});
+app.use(
+  cors({
+    origin: ['https://cise-speed-frontend.vercel.app'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    credentials: true,
+  }),
+);
 app.enableCors();
 
 app.get('/', (req, res) => res.send('Hello world!'));
