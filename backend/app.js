@@ -1,10 +1,20 @@
 const express = require('express');
 const connectDB = require('./config/db');
+const cors = require('cors');
 
 const app = express();
 
 // Connect Database
 connectDB();
+
+app.use(
+  cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  }),
+);
+
+app.enableCors();
 
 app.get('/', (req, res) => res.send('Hello world!'));
 
