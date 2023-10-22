@@ -7,6 +7,13 @@ const app = express();
 // Connect Database
 connectDB();
 
+app.use(
+  cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  }),
+);
+
 app.use(cors());
 app.enableCors();
 
