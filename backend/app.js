@@ -14,7 +14,6 @@ app.use(
   }),
 );
 
-app.use(cors());
 app.enableCors();
 
 app.get('/', (req, res) => res.send('Hello world!'));
