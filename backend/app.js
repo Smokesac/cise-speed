@@ -9,7 +9,7 @@ connectDB();
 
 app.use(
   cors({
-    origin: ['www.google.com'],
+    origin: ['*'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   }),
